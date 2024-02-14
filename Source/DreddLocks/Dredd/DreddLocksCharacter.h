@@ -8,9 +8,10 @@
 #include "DreddLocks/GAS/GASGameplayAbility.h"
 #include "DreddLocks/GAS/GASAbilitySystemComponent.h"
 #include "DreddLocks/GAS/GASAttributeSet.h"
-
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
+
 #include "Logging/LogMacros.h"
 #include "DreddLocksCharacter.generated.h"
 
@@ -25,8 +26,8 @@ struct FInputActionValue;
 class UHealtComponent;
 class UGASAttributeSet;
 
+//DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 
 
@@ -38,6 +39,7 @@ enum class DreddState : uint8
 };
 
 UDELEGATE(BlueprintAuthorityOnly)
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDreddStateChangedEvent, DreddState, NewDreddStateType);
 
 
@@ -115,10 +117,40 @@ public:
 
   UPROPERTY(BlueprintAssignable, Category = "DreddState | Events", meta = (ToolTip = "Broadcast when the state is changed"))
       FDreddStateChangedEvent DreddStateChanged;
- 
+    
+  //GAS
 
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+      class UAbilitySystemComponent* AbilitySystemComponent;
   
-  
+  virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override
+  {
+      return AbilitySystemComponent;
+  }
+
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+      const class UGASAttributeSet* BasicAttributeSet;
+
+
+  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
+      void GetHealthValues(float& Health , float& MaxHealth);
+
+  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
+      void GetStaminaValues(float& Stamina, float& MaxStamina);
+
+  void OnHealthCnhangeNative(const FOnAttributeChangeData& Data);
+  void OnStaminaCnhangeNative(const FOnAttributeChangeData& Data);
+
+  UFUNCTION(BlueprintImplementableEvent, Category = "BaseCharacter")
+      void OnHealthChanged(float OldValue, float NewValue);
+  UFUNCTION(BlueprintImplementableEvent, Category = "BaseCharacter")
+      void OnStaminaChanged(float OldValue, float NewValue);
+
+  UFUNCTION(BlueprintCallable, Category = "BaseCharacter")
+      //We use TSubclassOf to be able to use classes that come from UGameplayAbility
+      void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel);
+
+
 
 public:
   ADreddLocksCharacter();
@@ -146,50 +178,27 @@ protected:
   // To add mapping context
   virtual void BeginPlay();
 
-  UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+
+  //Lista de habiilidades que habrá que inicializar y que heredad de UGASGameplayAbility
+
+  /*
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+      TArray<TSubclassOf<UGASGameplayAbility>> PassiveGameplayEffects;
+  */
+  /*
+  *  UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
       TArray<TSubclassOf<UGameplayEffect>> PassiveGameplayEffects;
+  */
+
+ 
+
 
   //GAS
 
-
-  UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-      class UAbilitySystemComponent* AbilitySystemComponent;
-
-  /*
-  virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override {
-
-      return AbilitySystemComponent;
-  }
-  */
-
-  UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true")) 
-      const class UGASAttributeSet* BasicAtributeSet;
   
 
-  UFUNCTION(BlueprintCallable, Category = "BaseCharacter")
-      //We use TSubclassOf to be able to use classes that come from UGameplayAbility
-      void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet , int32 AbilityLevel);
 
 
-  virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
-
-
-  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "BaseCharacter")
-      const class UGASAttributeSet* BaseAttributeSetComp;
-
-  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
-      void GetHealthValues(float& Health, float& MaxHealth);
-
-  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
-      void GetStaminaValues(float& Stamina, float& MaxStamina);
-
-  void OnHealthCnhangeNative(const FOnAttributeChangeData& Data);
-  void OnStaminaCnhangeNative(const FOnAttributeChangeData& Data);
-
-  UFUNCTION(BlueprintImplementableEvent, Category = "BaseCharacter")
-      void OnHealthChanged(float OldValue, float NewValue);
-  UFUNCTION(BlueprintImplementableEvent, Category = "BaseCharacter")
-      void OnStaminaChanged(float OldValue, float NewValue);
 
 
 public:

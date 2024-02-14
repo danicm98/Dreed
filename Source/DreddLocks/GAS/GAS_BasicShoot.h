@@ -4,18 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "GASGameplayAbility.generated.h"
+#include "GAS_BasicShoot.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DREDDLOCKS_API UGASGameplayAbility : public UGameplayAbility
+class DREDDLOCKS_API UGAS_BasicShoot : public UGameplayAbility
 {
 	GENERATED_BODY()
-
-public:
-
-	UGASGameplayAbility();
 	
 };

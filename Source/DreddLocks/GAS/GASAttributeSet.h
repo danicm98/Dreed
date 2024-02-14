@@ -31,24 +31,22 @@ public:
 
 
 	//Health
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+		FGameplayAttributeData Stamina;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Stamina);
 
-
-	UPROPERTY(BlueprintReadWrite , Category = "Attributes" )
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes" )
 		FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Health);
 
 
-	UPROPERTY(BlueprintReadWrite, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 		FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxHealth);
 
 	//Stamina
 
-	UPROPERTY(BlueprintReadWrite, Category = "Attributes")
-		FGameplayAttributeData Stamina;
-	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Stamina);
-
-	UPROPERTY(BlueprintReadWrite, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 		FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxStamina);
 

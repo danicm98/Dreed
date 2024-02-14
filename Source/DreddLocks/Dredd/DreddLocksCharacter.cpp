@@ -23,11 +23,14 @@
 #include <DreddLocks/Shoot/AimAbilityComponent.h>
 #include "../Components/HealtComponent.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+//DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 
 //////////////////////////////////////////////////////////////////////////
 // ADreddLocksCharacter
+
+
+
 
 ADreddLocksCharacter::ADreddLocksCharacter()
 {
@@ -80,9 +83,10 @@ ADreddLocksCharacter::ADreddLocksCharacter()
 
   AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
-
-
 }
+
+
+
 
 void ADreddLocksCharacter::BeginPlay()
 {
@@ -91,18 +95,13 @@ void ADreddLocksCharacter::BeginPlay()
 
   //GAS
 
-  if (IsValid(AbilitySystemComponent)) {
+  if (IsValid(AbilitySystemComponent))
+  {
+      BasicAttributeSet = AbilitySystemComponent->GetSet<UGASAttributeSet>();
 
-      //Initialize attributes
-      BasicAtributeSet = AbilitySystemComponent->GetSet<UGASAttributeSet>();
-
-      AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BaseAttributeSetComp->GetHealthAttribute()).AddUObject(this , &ADreddLocksCharacter::OnHealthCnhangeNative);
-      AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BaseAttributeSetComp->GetStaminaAttribute()).AddUObject(this, &ADreddLocksCharacter::OnStaminaCnhangeNative);
-
-
+      AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BasicAttributeSet->GetHealthAttribute()).AddUObject(this, &ADreddLocksCharacter::OnHealthCnhangeNative);
+      AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BasicAttributeSet->GetStaminaAttribute()).AddUObject(this, &ADreddLocksCharacter::OnStaminaCnhangeNative);
   }
-
-
 
 
   //Add Input Mapping Context
@@ -147,7 +146,7 @@ void ADreddLocksCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
   }
   else
   {
-    UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+    //UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
   }
 }
 
@@ -206,7 +205,15 @@ void ADreddLocksCharacter::Crouch(const bool bValue)
 void ADreddLocksCharacter::Shoot(const bool bValue)
 {
   //BOOM!
-  if (bValue)
+
+    //AbilitySystemComponent->TryActivateAbilityByClass();
+
+
+
+
+/*
+
+if (bValue)
   {
     ShootingAbilityComponent->StartShooting();
     UE_LOG(LogTemp, Warning, TEXT("BOOOM!"));
@@ -215,6 +222,12 @@ void ADreddLocksCharacter::Shoot(const bool bValue)
   {
     ShootingAbilityComponent->StopShooting();
   }
+
+*/
+
+
+
+  
 }
 
 
@@ -263,38 +276,18 @@ void ADreddLocksCharacter::ResetState()
 
 //GAS
 
-void ADreddLocksCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel)
-{
-
-    if (AbilitySystemComponent) {
-
-        if (HasAuthority() && AbilityToGet) {
-
-            AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
-        }
-        AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-    }
-}
-
-UAbilitySystemComponent* ADreddLocksCharacter::GetAbilitySystemComponent() const
-{
-    
-    return AbilitySystemComponent;
-}
-
 void ADreddLocksCharacter::GetHealthValues(float& Health, float& MaxHealth)
 {
-    Health = BaseAttributeSetComp->GetHealth();
-    MaxHealth = BaseAttributeSetComp->GetMaxHealth();
+    Health = BasicAttributeSet->GetHealth();
+    MaxHealth = BasicAttributeSet->GetMaxHealth();
 
 }
 
 void ADreddLocksCharacter::GetStaminaValues(float& Stamina, float& MaxStamina)
 {
 
-    Stamina = BaseAttributeSetComp->GetStamina();
-    MaxStamina = BaseAttributeSetComp->GetMaxStamina();
+    Stamina = BasicAttributeSet->GetStamina();
+    MaxStamina = BasicAttributeSet->GetMaxStamina();
 }
 
 void ADreddLocksCharacter::OnHealthCnhangeNative(const FOnAttributeChangeData& Data)
@@ -306,4 +299,22 @@ void ADreddLocksCharacter::OnStaminaCnhangeNative(const FOnAttributeChangeData& 
 {
     OnStaminaChanged(Data.OldValue, Data.NewValue);
 }
+
+void ADreddLocksCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel )
+{
+
+    if (AbilitySystemComponent) {
+
+        if (HasAuthority() && AbilityToGet) {
+
+            AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel, 0));
+        }
+        AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+    }
+
+    
+}
+
+
 
