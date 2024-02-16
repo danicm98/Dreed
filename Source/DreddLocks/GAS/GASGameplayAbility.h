@@ -16,6 +16,6 @@ class DREDDLOCKS_API UGASGameplayAbility : public UGameplayAbility
 
 public:
 
-	UGASGameplayAbility();
+	//UGASGameplayAbility();
 	
 };

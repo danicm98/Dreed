@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
+//
 #include "DreddLocks/GAS/GASGameplayAbility.h"
 #include "DreddLocks/GAS/GASAbilitySystemComponent.h"
 #include "DreddLocks/GAS/GASAttributeSet.h"
+
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbility.h"
@@ -18,6 +20,7 @@
 class UGameplayEffect;
 class USpringArmComponent;
 class UCameraComponent;
+class UGAS_BasicShoot;
 class UInputMappingContext;
 class UInputAction;
 class UAimAbilityComponent;
@@ -28,7 +31,14 @@ class UGASAttributeSet;
 
 //DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-
+UENUM(BlueprintType, meta = (DisplayName = "ShootMode"))
+enum class ShootMode : uint8
+{
+    None UMETA(DispayName = "None"),
+    Confirm UMETA(DispayName = "Confirm"),
+    Cancel UMETA(DispayName = "Cancel"),
+    Basic  UMETA(DisplayName = "Basic")
+};
 
 
 UENUM(BlueprintType, meta = (DisplayName = "States"))
@@ -39,6 +49,7 @@ enum class DreddState : uint8
 };
 
 UDELEGATE(BlueprintAuthorityOnly)
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDreddStateChangedEvent, DreddState, NewDreddStateType);
 
@@ -89,6 +100,10 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* LookAction;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AIVision)
+      UStaticMeshComponent* Weapon;
+
+
   /** Look Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* ShootAction;
@@ -117,11 +132,14 @@ public:
 
   UPROPERTY(BlueprintAssignable, Category = "DreddState | Events", meta = (ToolTip = "Broadcast when the state is changed"))
       FDreddStateChangedEvent DreddStateChanged;
+
+
+
     
   //GAS
 
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
-      class UAbilitySystemComponent* AbilitySystemComponent;
+      class UGASAbilitySystemComponent* AbilitySystemComponent;
   
   virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override
   {
@@ -150,7 +168,20 @@ public:
       //We use TSubclassOf to be able to use classes that come from UGameplayAbility
       void InitializeAbility(TSubclassOf<UGameplayAbility> AbilityToGet, int32 AbilityLevel);
 
+  
+  UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
+      TArray<TSubclassOf<class UGAS_BasicShoot>> CharacterAbilities;
 
+  UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
+      TSubclassOf<UGameplayAbility> ShootAbility;
+
+
+  virtual void AddCharacterAbilities();
+
+
+  virtual int32 GetAbilityLevel(ShootMode AbilityID) const;
+  
+  
 
 public:
   ADreddLocksCharacter();
@@ -167,7 +198,7 @@ protected:
   void Crouch(const bool bValue);
 
   /** Called for shoot input */
-  void Shoot(const bool bValue);
+  void Shoot(const bool bValue );
 
   /** Called for crouch input */
   void JumpWithAnimation(const bool IsActive);
@@ -177,6 +208,8 @@ protected:
 
   // To add mapping context
   virtual void BeginPlay();
+
+  bool ASCInputBound = false;
 
 
   //Lista de habiilidades que habrá que inicializar y que heredad de UGASGameplayAbility
@@ -220,5 +253,6 @@ public:
     - Use it to exit an state
  */
   void ResetState();
+  
 };
 

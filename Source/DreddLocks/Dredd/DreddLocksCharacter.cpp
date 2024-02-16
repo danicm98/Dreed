@@ -4,6 +4,7 @@
 #include "DreddLocksCharacter.h"
 #include "Engine/LocalPlayer.h"
 
+#include "DreddLocks/GAS/GAS_BasicShoot.h"
 #include "DreddLocks/GAS/Prueba.h"
 #include "DreddLocks/GAS/GASGameplayAbility.h"
 #include "DreddLocks/GAS/GASAbilitySystemComponent.h"
@@ -28,6 +29,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 // ADreddLocksCharacter
+
+
 
 
 
@@ -75,13 +78,16 @@ ADreddLocksCharacter::ADreddLocksCharacter()
 
   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
   // are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+  Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
+  //Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Weapon_R"));
+
 
   ShootingAbilityComponent = CreateDefaultSubobject<UShootingAbilityComponent>(TEXT("ShootingAbility"));
   AimAbilityComponent = CreateDefaultSubobject<UAimAbilityComponent>(TEXT("AimAbility"));
 
   //GAS
 
-  AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+  AbilitySystemComponent = CreateDefaultSubobject<UGASAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 }
 
@@ -94,6 +100,7 @@ void ADreddLocksCharacter::BeginPlay()
   Super::BeginPlay();
 
   //GAS
+  AddCharacterAbilities();
 
   if (IsValid(AbilitySystemComponent))
   {
@@ -202,32 +209,13 @@ void ADreddLocksCharacter::Crouch(const bool bValue)
   }
 }
 
-void ADreddLocksCharacter::Shoot(const bool bValue)
+void ADreddLocksCharacter::Shoot(const bool bValue )
 {
-  //BOOM!
-
-    //AbilitySystemComponent->TryActivateAbilityByClass();
-
-
-
-
-/*
-
-if (bValue)
-  {
-    ShootingAbilityComponent->StartShooting();
-    UE_LOG(LogTemp, Warning, TEXT("BOOOM!"));
-  }
-  else
-  {
-    ShootingAbilityComponent->StopShooting();
-  }
-
-*/
-
-
-
-  
+    //Para que se llame solo cuando se pulse
+    if (bValue)
+    {
+    AbilitySystemComponent->TryActivateAbilityByClass(ShootAbility);
+    }
 }
 
 
@@ -273,7 +261,6 @@ void ADreddLocksCharacter::ResetState()
 
 
 
-
 //GAS
 
 void ADreddLocksCharacter::GetHealthValues(float& Health, float& MaxHealth)
@@ -314,6 +301,28 @@ void ADreddLocksCharacter::InitializeAbility(TSubclassOf<UGameplayAbility> Abili
     }
 
     
+}
+
+void ADreddLocksCharacter::AddCharacterAbilities()
+{
+
+    if (!IsValid(AbilitySystemComponent) || AbilitySystemComponent->bCharacterAbilitiesGiven) {
+        return;
+    }
+
+    for (TSubclassOf<UGAS_BasicShoot>& StartupAbility : CharacterAbilities)
+    {
+     
+        AbilitySystemComponent->GiveAbility(
+            FGameplayAbilitySpec(StartupAbility, GetAbilityLevel(StartupAbility.GetDefaultObject()->AbilityID), static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+    }
+
+    AbilitySystemComponent->bCharacterAbilitiesGiven = true;
+}
+
+int32 ADreddLocksCharacter::GetAbilityLevel(ShootMode AbilityID) const
+{
+    return 1;
 }
 
 

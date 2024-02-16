@@ -13,5 +13,9 @@ UCLASS()
 class DREDDLOCKS_API UGASAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+
+public:
+	bool bCharacterAbilitiesGiven = false;
+		
 	
 };
