@@ -188,6 +188,7 @@ public:
 
 protected:
 
+  //virtual void PostInitializeComponents() override;
   /** Called for movement input */
   void Move(const FInputActionValue& Value);
 

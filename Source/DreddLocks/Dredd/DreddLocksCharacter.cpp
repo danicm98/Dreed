@@ -11,6 +11,7 @@
 #include "DreddLocks/GAS/GASAttributeSet.h"
 //#include "../DreddLocks/MyAbilitySystemComponent"
 
+#include "Components/ArrowComponent.h"
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -74,11 +75,15 @@ ADreddLocksCharacter::ADreddLocksCharacter()
   FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
   HealthComponent = CreateDefaultSubobject<UHealtComponent>(TEXT("HealthComponent"));
-  AddOwnedComponent(HealthComponent);
+  AddOwnedComponent(RootComponent);
 
   // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
   // are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
   Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
+  //FollowCamera->SetupAttachment(GetMesh());
+  Weapon->SetupAttachment(GetMesh());
+
+
   //Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Weapon_R"));
 
 
@@ -98,6 +103,8 @@ void ADreddLocksCharacter::BeginPlay()
 {
   // Call the base class  
   Super::BeginPlay();
+
+
 
   //GAS
   AddCharacterAbilities();
@@ -120,6 +127,18 @@ void ADreddLocksCharacter::BeginPlay()
     }
   }
 }
+
+/*
+* void ADreddLocksCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+
+    if (Weapon && GetMesh())
+    {
+        Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Weapon_R"));
+    }
+}
+*/
 
 
 

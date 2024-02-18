@@ -5,6 +5,7 @@
 #include "GameplayTagContainer.h"
 #include "../Dredd/DreddLocksCharacter.h"
 #include "../Dredd/BasicProjectil.h"
+#include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UMyGAS_BasicShoot::UMyGAS_BasicShoot()
@@ -93,26 +94,30 @@ void UMyGAS_BasicShoot::ThrowAbility() {
 	{
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 	}
-	FVector ForwardPlayer = Hero->GetActorForwardVector();
+
+
+
 	FVector Start = Hero->Weapon->GetComponentLocation();
-	FVector End = Start + Range * ForwardPlayer.Normalize();;
+	FVector End = Hero->Weapon->GetComponentLocation() + Hero->GetControlRotation().Vector() * Range;
 	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
 
-	FTransform MuzzleTransform = Hero->Weapon->GetComponentTransform();
-	MuzzleTransform.SetRotation(Rotation.Quaternion());
+	
+
+	FTransform MyTransform(Rotation, Start );
+	
 
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
 
-	ABasicProjectil* Projectile = GetWorld()->SpawnActorDeferred<ABasicProjectil>(ProjectileClass, MuzzleTransform, GetOwningActorFromActorInfo(), Hero, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	/*
-	* 	
-	Projectile->DamageEffectSpecHandle = DamageEffectSpecHandle;
+	ABasicProjectil* Projectile = GetWorld()->SpawnActorDeferred<ABasicProjectil>(ProjectileClass, MyTransform, GetOwningActorFromActorInfo(),
+		Hero, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	
 	Projectile->Range = Range;
-	Projectile->FinishSpawning(MuzzleTransform);
-	*/
-	Projectile->FinishSpawning(MuzzleTransform);
+	Projectile->FinishSpawning(MyTransform);
+
+
+
+
 
 }
 
