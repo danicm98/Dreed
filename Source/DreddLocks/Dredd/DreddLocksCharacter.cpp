@@ -167,6 +167,9 @@ void ADreddLocksCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
     EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &ADreddLocksCharacter::Shoot, true);
     EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &ADreddLocksCharacter::Shoot, false);
 
+    EnhancedInputComponent->BindAction(RechargeAction, ETriggerEvent::Started, this, &ADreddLocksCharacter::Recharge, true);
+    EnhancedInputComponent->BindAction(RechargeAction, ETriggerEvent::Completed, this, &ADreddLocksCharacter::Recharge, false);
+
     EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, AimAbilityComponent, &UAimAbilityComponent::Aim, true);
     EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, AimAbilityComponent, &UAimAbilityComponent::Aim, false);
   }
@@ -231,12 +234,19 @@ void ADreddLocksCharacter::Crouch(const bool bValue)
 void ADreddLocksCharacter::Shoot(const bool bValue )
 {
     //Para que se llame solo cuando se pulse
-    if (bValue)
+    if (bValue && ActualPlayerShootMode == ShootMode::Basic)
     {
-    AbilitySystemComponent->TryActivateAbilityByClass(ShootAbility);
+    AbilitySystemComponent->TryActivateAbilityByClass(BasicShootAbility);
     }
 }
 
+void ADreddLocksCharacter::Recharge(const bool bValue)
+{
+    if (bValue) {
+        AbilitySystemComponent->TryActivateAbilityByClass(RechargeAbility);
+    }
+
+}
 
 
 
@@ -295,6 +305,21 @@ void ADreddLocksCharacter::GetStaminaValues(float& Stamina, float& MaxStamina)
     Stamina = BasicAttributeSet->GetStamina();
     MaxStamina = BasicAttributeSet->GetMaxStamina();
 }
+
+void ADreddLocksCharacter::GetChargerBasicBulletsValues(float& ChargerBasicBullets, float& MaxChargerBasicBullets)
+{
+
+    ChargerBasicBullets = BasicAttributeSet->GetChargerBasicBullets();
+    MaxChargerBasicBullets = BasicAttributeSet->GetMaxChargerBasicBullets();
+}
+
+void ADreddLocksCharacter::GetTotalBasicBulletsValues(float& TotalBasicBullets, float& MaxTotalBasicBullets)
+{
+
+    TotalBasicBullets = BasicAttributeSet->GetTotalBasicBullets();
+    MaxTotalBasicBullets = BasicAttributeSet->GetMaxTotalBasicBullets();
+}
+
 
 void ADreddLocksCharacter::OnHealthCnhangeNative(const FOnAttributeChangeData& Data)
 {

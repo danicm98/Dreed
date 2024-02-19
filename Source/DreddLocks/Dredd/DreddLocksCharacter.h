@@ -108,6 +108,10 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* ShootAction;
 
+  UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+  UInputAction* RechargeAction;
+  
+
   /** Aim Input Action */
   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
   UInputAction* AimAction;
@@ -156,6 +160,12 @@ public:
   UFUNCTION(BlueprintPure, Category = "BaseCharacter")
       void GetStaminaValues(float& Stamina, float& MaxStamina);
 
+  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
+  void GetChargerBasicBulletsValues(float& ChargerBasicBullets, float& MaxChargerBasicBullets);
+
+  UFUNCTION(BlueprintPure, Category = "BaseCharacter")
+  void GetTotalBasicBulletsValues(float& TotalBasicBullets, float& MaxTotalBasicBullets);
+
   void OnHealthCnhangeNative(const FOnAttributeChangeData& Data);
   void OnStaminaCnhangeNative(const FOnAttributeChangeData& Data);
 
@@ -173,13 +183,20 @@ public:
       TArray<TSubclassOf<class UGAS_BasicShoot>> CharacterAbilities;
 
   UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
-      TSubclassOf<UGameplayAbility> ShootAbility;
+      TSubclassOf<UGameplayAbility> BasicShootAbility;
+
+  UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
+      TSubclassOf<UGameplayAbility> RechargeAbility;
 
 
   virtual void AddCharacterAbilities();
 
 
   virtual int32 GetAbilityLevel(ShootMode AbilityID) const;
+
+  UPROPERTY(EditAnywhere, BlueprintReadOnly)
+      ShootMode ActualPlayerShootMode = ShootMode::Basic;
+
   
   
 
@@ -200,6 +217,8 @@ protected:
 
   /** Called for shoot input */
   void Shoot(const bool bValue );
+
+  void Recharge(const bool bValue);
 
   /** Called for crouch input */
   void JumpWithAnimation(const bool IsActive);

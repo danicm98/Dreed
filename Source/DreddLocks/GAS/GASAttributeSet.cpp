@@ -20,5 +20,14 @@ void UGASAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 		SetStamina(FMath::Clamp(GetStamina(), 0.0f, GetMaxStamina()));
 	}
 
+	if (Data.EvaluatedData.Attribute == GetChargerBasicBulletsAttribute()) {
+		SetChargerBasicBullets(FMath::Clamp(GetChargerBasicBullets(), 0.0f, GetMaxChargerBasicBullets()));
+	}
+	if (Data.EvaluatedData.Attribute == GetTotalBasicBulletsAttribute()) {
+		SetTotalBasicBullets(FMath::Clamp(GetTotalBasicBullets(), 0.0f, GetMaxTotalBasicBullets()));
+	}
+
+	
+
 }
 

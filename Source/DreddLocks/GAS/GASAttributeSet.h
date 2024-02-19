@@ -50,6 +50,30 @@ public:
 		FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxStamina);
 
+
+
+
+	//Basic Weapon
+
+	UPROPERTY(BlueprintReadOnly, Category = "Basic Weapon Attribute")
+		FGameplayAttributeData ChargerBasicBullets;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, ChargerBasicBullets);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Basic Weapon Attribute")
+		FGameplayAttributeData MaxChargerBasicBullets;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxChargerBasicBullets);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Basic Weapon Attribute")
+		FGameplayAttributeData TotalBasicBullets;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, TotalBasicBullets);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Basic Weapon Attribute")
+		FGameplayAttributeData MaxTotalBasicBullets;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxTotalBasicBullets);
+
+
+
+
 	
 	//Is in charge of comunicate us when a attribute change 
 
