@@ -5,6 +5,7 @@
 #include "Engine/LocalPlayer.h"
 
 #include "DreddLocks/GAS/GAS_BasicShoot.h"
+#include "../GAS/GAS_GameplayAbilityBase.h"
 #include "DreddLocks/GAS/Prueba.h"
 #include "DreddLocks/GAS/GASGameplayAbility.h"
 #include "DreddLocks/GAS/GASAbilitySystemComponent.h"
@@ -242,8 +243,12 @@ void ADreddLocksCharacter::Shoot(const bool bValue )
 
 void ADreddLocksCharacter::Recharge(const bool bValue)
 {
+
+
     if (bValue) {
         AbilitySystemComponent->TryActivateAbilityByClass(RechargeAbility);
+
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Recharge");
     }
 
 }
@@ -354,12 +359,33 @@ void ADreddLocksCharacter::AddCharacterAbilities()
         return;
     }
 
-    for (TSubclassOf<UGAS_BasicShoot>& StartupAbility : CharacterAbilities)
+    for (TSubclassOf<UGAS_BasicShoot>& StartupAbility : CharacterShootAbilities)
     {
-     
+
+        
         AbilitySystemComponent->GiveAbility(
             FGameplayAbilitySpec(StartupAbility, GetAbilityLevel(StartupAbility.GetDefaultObject()->AbilityID), static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
     }
+
+    //MAL
+    
+    
+    for (TSubclassOf<UGAS_GameplayAbilityBase>& Ability : CharacterAbilities)
+    {
+        
+        AbilitySystemComponent->GiveAbility(
+            FGameplayAbilitySpec(Ability, GetAbilityLevel(Ability.GetDefaultObject()->AbilityID), static_cast<int32>(Ability.GetDefaultObject()->AbilityInputID), this));
+
+    }
+    
+    
+    
+    
+    
+
+
+
+
 
     AbilitySystemComponent->bCharacterAbilitiesGiven = true;
 }

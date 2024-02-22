@@ -21,6 +21,7 @@ class UGameplayEffect;
 class USpringArmComponent;
 class UCameraComponent;
 class UGAS_BasicShoot;
+class UGAS_GameplayAbilityBase;
 class UInputMappingContext;
 class UInputAction;
 class UAimAbilityComponent;
@@ -36,9 +37,11 @@ enum class ShootMode : uint8
 {
     None UMETA(DispayName = "None"),
     Confirm UMETA(DispayName = "Confirm"),
-    Cancel UMETA(DispayName = "Cancel"),
+    Recharge UMETA(DispayName = "Recharge"),
     Basic  UMETA(DisplayName = "Basic")
 };
+
+
 
 
 UENUM(BlueprintType, meta = (DisplayName = "States"))
@@ -180,7 +183,10 @@ public:
 
   
   UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
-      TArray<TSubclassOf<class UGAS_BasicShoot>> CharacterAbilities;
+      TArray<TSubclassOf<class UGAS_BasicShoot>> CharacterShootAbilities;
+
+  UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
+      TArray<TSubclassOf<class UGAS_GameplayAbilityBase>> CharacterAbilities;
 
   UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GASDocumentation|Abilities")
       TSubclassOf<UGameplayAbility> BasicShootAbility;

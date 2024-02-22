@@ -3,22 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DreddLocks/Dredd/DreddLocksCharacter.h"
 #include "Abilities/GameplayAbility.h"
-#include "GAS_BasicShoot.generated.h"
+#include "DreddLocks/Dredd/DreddLocksCharacter.h"
+#include "GAS_GameplayAbilityBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DREDDLOCKS_API UGAS_BasicShoot : public UGameplayAbility
+class DREDDLOCKS_API UGAS_GameplayAbilityBase : public UGameplayAbility
 {
-
 	GENERATED_BODY()
 
-public:
 
-	UGAS_BasicShoot();
+public:
+	UGAS_GameplayAbilityBase();
+
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		ShootMode AbilityInputID = ShootMode::None;
@@ -33,5 +33,6 @@ public:
 		bool ActivateAbilityOnGranted = false;
 
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+
 	
 };

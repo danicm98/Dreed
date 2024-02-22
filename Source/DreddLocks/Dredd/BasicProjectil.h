@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffect.h"
 #include "BasicProjectil.generated.h"
 
 UCLASS()
@@ -18,6 +19,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Meta = (ExposeOnSpawn = true))
 		float Range;
 
+	UPROPERTY(BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+		FGameplayEffectSpecHandle RechargeEffectSpecHandle;
+
+
+	
 
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
