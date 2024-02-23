@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "AIWaypointGeneral.h"
+#include "DreddLocks/GAS/GASAbilitySystemComponent.h"
 #include "BaseEnemy.generated.h"
 
 
@@ -16,8 +17,7 @@ class DREDDLOCKS_API ABaseEnemy : public APawn
 
 public:
 	/** COMPONENTS */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UHealtComponent* HealthComponent;
+
 
 	/** ATTACK */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Enemy | Attack", meta = (DisplayName = "base Damage",
@@ -29,6 +29,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Order")
 	TArray<AAIWaypointGeneral*> TargetPoints;
+
+
+	//GAS
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+		class UGASAbilitySystemComponent* AbilitySystemComponent;
+
+
+
 
 private:
 	bool isDead = false;

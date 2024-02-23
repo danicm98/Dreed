@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
 #include "GameplayEffect.h"
+#include "../Enemies/BaseEnemy.h"
 #include "BasicProjectil.generated.h"
 
 UCLASS()
@@ -22,8 +24,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
 		FGameplayEffectSpecHandle RechargeEffectSpecHandle;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class USphereComponent* SphereCollision;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+		class UStaticMeshComponent* ShootMesh;
 	
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)

@@ -66,13 +66,19 @@ void UGAS_EffectRechargeCalculation::Execute_Implementation(const FGameplayEffec
 
 	float bulletToRecharge = MaxChargerBasicBullets  - ChargerBasicBullets;
 
-	if (TotalBasicBullets - bulletToRecharge >= 0) {
+	if (TotalBasicBullets - bulletToRecharge >= 0 || TotalBasicBullets > 0) {
 
 		//TotalBasicBullets - bulletToRecharge;
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(RechargeStatics().TotalBasicBulletsProperty, EGameplayModOp::Additive,  -bulletToRecharge));
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(RechargeStatics().ChargerBasicBulletsProperty, EGameplayModOp::Additive, bulletToRecharge-1));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(RechargeStatics().ChargerBasicBulletsProperty, EGameplayModOp::Additive, bulletToRecharge));
 
 	}
+	else if (bulletToRecharge>= ChargerBasicBullets) {
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(RechargeStatics().TotalBasicBulletsProperty, EGameplayModOp::Additive, -ChargerBasicBullets));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(RechargeStatics().ChargerBasicBulletsProperty, EGameplayModOp::Additive, ChargerBasicBullets));
+
+	}
+	
 
 
 

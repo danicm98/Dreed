@@ -10,7 +10,8 @@ ABaseEnemy::ABaseEnemy()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	HealthComponent = CreateDefaultSubobject<UHealtComponent>(TEXT("HealthComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<UGASAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+
 
 }
 
@@ -20,7 +21,7 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	initialTransform = GetActorTransform();
 
-	HealthComponent->zerohealthEvent.AddDynamic(this, &ABaseEnemy::whenHpGoesTo0);
+	
 	
 }
 
