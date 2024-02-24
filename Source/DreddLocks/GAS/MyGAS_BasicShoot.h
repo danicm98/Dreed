@@ -36,6 +36,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TSubclassOf<ABasicProjectil> ProjectileClass;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TSubclassOf<UGameplayEffect> DamageGameplayEffect;
+
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		UAnimMontage* FireHipMontage;

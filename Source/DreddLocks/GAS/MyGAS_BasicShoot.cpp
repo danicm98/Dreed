@@ -84,6 +84,11 @@ bool UMyGAS_BasicShoot::CanActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 void UMyGAS_BasicShoot::ThrowAbility() {
 
+	FGameplayEffectSpecHandle DamageEffectSpecHandle = MakeOutgoingGameplayEffectSpec(DamageGameplayEffect, GetAbilityLevel());
+	//DamageEffectSpecHandle.Data.Get()->SetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), Damage);
+
+
+
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Throw Ability");
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	
@@ -112,10 +117,14 @@ void UMyGAS_BasicShoot::ThrowAbility() {
 	ABasicProjectil* Projectile = GetWorld()->SpawnActorDeferred<ABasicProjectil>(ProjectileClass, MyTransform, GetOwningActorFromActorInfo(),
 		Hero, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
+	Projectile->DamageEffectSpecHandle = DamageEffectSpecHandle;
+	UGameplayEffect* DamageGameplayEffectInstance = NewObject<UGameplayEffect>(GetTransientPackage(), DamageGameplayEffect);
+
+	Projectile->DamageEffect = DamageGameplayEffectInstance;
 	Projectile->Range = Range;
 	Projectile->FinishSpawning(MyTransform);
 
-
+	//ApplyGameplayEffectSpecToOwner(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, DamageEffectSpecHandle);
 
 
 

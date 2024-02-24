@@ -2,6 +2,9 @@
 
 
 #include "BaseEnemy.h"
+#include "DreddLocks/GAS/GASAbilitySystemComponent.h"
+#include "../GAS/GAS_GameplayAbilityBase.h"
+#include "../GAS/GAS_GameplayAbilityBase.h"
 #include "../Components/HealtComponent.h"
 
 // Sets default values
@@ -12,7 +15,7 @@ ABaseEnemy::ABaseEnemy()
 
 	AbilitySystemComponent = CreateDefaultSubobject<UGASAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -21,9 +24,61 @@ void ABaseEnemy::BeginPlay()
 	Super::BeginPlay();
 	initialTransform = GetActorTransform();
 
+
+	AddCharacterAbilities();
+
+	if (IsValid(AbilitySystemComponent))
+	{
+		BasicAttributeSet = AbilitySystemComponent->GetSet<UGAS_EnemyAttributeSet>();
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BasicAttributeSet->GetEnemyHealthAttribute()).AddUObject(this, &ABaseEnemy::OnEnemyHealthCnhangeNative);
+
+
+		
+	}
+
+	
+	
+
+		
 	
 	
 }
+void ABaseEnemy::AddCharacterAbilities() {
+
+	for (TSubclassOf<UGAS_GameplayAbilityBase>& Ability : CharacterAbilities)
+	{
+
+		AbilitySystemComponent->GiveAbility(
+			FGameplayAbilitySpec(Ability, 1, static_cast<int32>(Ability.GetDefaultObject()->AbilityInputID), this));
+
+	}
+}
+
+
+
+void ABaseEnemy::GetEnemyHealthValues(float& EnemyHealth, float& MaxHealth)
+{
+	EnemyHealth = BasicAttributeSet->GetEnemyHealth();
+	MaxHealth = BasicAttributeSet->GetMaxHealth();
+
+}
+
+void ABaseEnemy::GetArmorValues(float& Armor, float& MaxArmor)
+{
+	Armor = BasicAttributeSet->GetArmor();
+	MaxArmor = BasicAttributeSet->GetMaxArmor();
+}
+
+void ABaseEnemy::GetBasicDamageValues(float& BasicDamage)
+{
+	BasicDamage = BasicAttributeSet->GetBasicDamage();
+}
+
+void ABaseEnemy::OnEnemyHealthCnhangeNative(const FOnAttributeChangeData& Data)
+{
+	OnEnemyHealthChanged(Data.OldValue, Data.NewValue);
+}
+
 
 void ABaseEnemy::whenHpGoesTo0(DamageModes type)
 {
@@ -46,7 +101,7 @@ void ABaseEnemy::Tick(float DeltaTime)
 // Called to bind functionality to input
 void ABaseEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	//Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 

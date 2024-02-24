@@ -2,6 +2,7 @@
 
 
 #include "../Dredd/BasicProjectil.h"
+#include "DreddLocks/GAS/GASAbilitySystemComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -32,9 +33,22 @@ void ABasicProjectil::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	ABaseEnemy* Actor = Cast<ABaseEnemy>(OtherActor);
 
 	
-	if (IsValid(Actor)){
+if (IsValid(Actor)){
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Me dio");
 		this->Destroy();
+		UGASAbilitySystemComponent* AbilityComponent = Actor->AbilitySystemComponent;
+
+		//const FActiveGameplayEffectHandle CurrentSpecHandle = AbilityComponent->ApplyGameplayEffectSpecToSelf(DamageEffectSpecHandle.Data.Get());
+		//FGameplayEffectActorInfo CurrentActorInfo(Actor, Instigator, AbilitySystemComponent, nullptr);
+		//FGameplayEffectActivationInfo CurrentActivationInfo = AbilityComponent->MakeEffectContext();
+
+
+		AbilityComponent->ApplyGameplayEffectToSelf(DamageEffect, 1.0f , AbilityComponent->MakeEffectContext());
+		//AbilityComponent->ApplyGameplayEffectSpecToSelf(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, DamageEffectSpecHandle);
+		
+		
+		//AbilityComponent->Applyga
+	
 	}
 
 }

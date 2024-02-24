@@ -18,6 +18,12 @@ public:
 	// Sets default values for this actor's properties
 	ABasicProjectil();
 
+	UPROPERTY(BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+		FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	UPROPERTY(BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
+		UGameplayEffect* DamageEffect;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Meta = (ExposeOnSpawn = true))
 		float Range;
 
