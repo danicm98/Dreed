@@ -34,7 +34,7 @@ void ABasicProjectil::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 
 	
 if (IsValid(Actor)){
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Me dio");
+		
 		this->Destroy();
 		UGASAbilitySystemComponent* AbilityComponent = Actor->AbilitySystemComponent;
 

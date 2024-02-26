@@ -3,6 +3,7 @@
 
 #include "../GAS/MyGAS_BasicShoot.h"
 #include "GameplayTagContainer.h"
+#include "../Shoot/ShootMontageTask.h"
 #include "../Dredd/DreddLocksCharacter.h"
 #include "../Dredd/BasicProjectil.h"
 #include "Components/ArrowComponent.h"
@@ -39,7 +40,12 @@ void UMyGAS_BasicShoot::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		
 	}
 
+	UAnimMontage* MontageToPlay = FireHipMontage;
+	UShootMontageTask* Task = UShootMontageTask::PlayMontageAndWaitForEvent(this, NAME_None, MontageToPlay, FGameplayTagContainer(), 1.0f, NAME_None, false, 1.0f);
+	Task->ReadyForActivation();
+
 	ThrowAbility();
+
 
 	//Le asignamos un montaje que podemos reproducir cuando se realice la habilidad
 	//UAnimMontage* MontageToPlay = FireHipMontage;
@@ -89,7 +95,7 @@ void UMyGAS_BasicShoot::ThrowAbility() {
 
 
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Throw Ability");
+	
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 	
 

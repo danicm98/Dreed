@@ -82,7 +82,7 @@ ADreddLocksCharacter::ADreddLocksCharacter()
   // are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
   Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
   //FollowCamera->SetupAttachment(GetMesh());
-  Weapon->SetupAttachment(GetMesh());
+  Weapon->SetupAttachment(GetMesh(), "Weapon_R");
 
 
   //Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("Weapon_R"));
@@ -248,7 +248,7 @@ void ADreddLocksCharacter::Recharge(const bool bValue)
     if (bValue) {
         AbilitySystemComponent->TryActivateAbilityByClass(RechargeAbility);
 
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Recharge");
+       
     }
 
 }

@@ -26,6 +26,7 @@ public:
 		float Damage = 12.0f;
 
 
+
 	//Este metodo es necesario para activar la tag pero no lo llamamos para activarla sino que llamamos a  APAHeroCharacter::ActivateAbilitiesWithTags()
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
